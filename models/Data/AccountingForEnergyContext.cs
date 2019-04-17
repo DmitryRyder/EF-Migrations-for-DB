@@ -23,31 +23,38 @@ namespace models.Data
                 .WithMany(t => t.rooms)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<Room_rental>()
-            //    .HasKey(t => new { t.RoomId, t.OrganizationId });
+            modelBuilder.Entity<Room_rental>()
+                .HasOne(p => p.Room)
+                .WithMany(t => t.Room_rentals)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<Room_rental>()
-            //    .HasOne(sc => sc.Room)
-            //    .WithMany(s => s.Room_rentals)
-            //    .HasForeignKey(sc => sc.RoomId);
+            modelBuilder.Entity<Room_rental>()
+                .HasOne(p => p.Organization)
+                .WithMany(t => t.Room_rentals)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<Room_rental>()
-            //    .HasOne(sc => sc.Organization)
-            //    .WithMany(c => c.Room_rentals)
-            //    .HasForeignKey(sc => sc.OrganizationId);
+            modelBuilder.Entity<Room_rental>()
+                .HasKey(t => new { t.Id });
 
-            //modelBuilder.Entity<ElectricsByOrganization>()
-            //    .HasKey(t => new { t.OrganizationId, t.ElectricId });
+            modelBuilder.Entity<ElectricsByOrganization>()
+                .HasOne(p => p.Electric)
+                .WithMany(t => t.ElectricsByOrganization)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<ElectricsByOrganization>()
-            //    .HasOne(sc => sc.Organization)
-            //    .WithMany(s => s.ElectricsByOrganization)
-            //    .HasForeignKey(sc => sc.OrganizationId);
+            modelBuilder.Entity<ElectricsByOrganization>()
+                .HasOne(p => p.Organization)
+                .WithMany(t => t.ElectricsByOrganization)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<ElectricsByOrganization>()
-            //    .HasOne(sc => sc.Electric)
-            //    .WithMany(c => c.ElectricsByOrganization)
-            //    .HasForeignKey(sc => sc.ElectricId);
+            modelBuilder.Entity<Lighting>()
+                .HasOne(p => p.Electric)
+                .WithMany(t => t.Lightings)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(p => p.Room_Rental)
+                .WithMany(t => t.Invoices)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

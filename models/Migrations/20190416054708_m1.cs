@@ -94,13 +94,13 @@ namespace models.Migrations
                         column: x => x.ElectricId,
                         principalTable: "Electric",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ElectricsByOrganization_Organizations_OrganizationId",
                         column: x => x.OrganizationId,
                         principalTable: "Organizations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,8 +111,8 @@ namespace models.Migrations
                     Number = table.Column<int>(nullable: false),
                     Area = table.Column<double>(nullable: false),
                     Floor = table.Column<int>(nullable: false),
-                    Type_of_roomId = table.Column<Guid>(nullable: false),
-                    BuildingId = table.Column<Guid>(nullable: false)
+                    Type_of_roomId = table.Column<Guid>(nullable: true),
+                    BuildingId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -149,13 +149,35 @@ namespace models.Migrations
                         column: x => x.OrganizationId,
                         principalTable: "Organizations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Room_rental_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Invoice",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    Number = table.Column<int>(nullable: false),
+                    DateOfCreate = table.Column<DateTime>(nullable: false),
+                    PaymentDate = table.Column<DateTime>(nullable: false),
+                    StatusOfPayment = table.Column<bool>(nullable: false),
+                    Room_RentalId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invoice", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invoice_Room_rental_Room_RentalId",
+                        column: x => x.Room_RentalId,
+                        principalTable: "Room_rental",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -167,6 +189,11 @@ namespace models.Migrations
                 name: "IX_ElectricsByOrganization_OrganizationId",
                 table: "ElectricsByOrganization",
                 column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invoice_Room_RentalId",
+                table: "Invoice",
+                column: "Room_RentalId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Lighting_ElectricId",
@@ -198,6 +225,9 @@ namespace models.Migrations
         {
             migrationBuilder.DropTable(
                 name: "ElectricsByOrganization");
+
+            migrationBuilder.DropTable(
+                name: "Invoice");
 
             migrationBuilder.DropTable(
                 name: "Lighting");

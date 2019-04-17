@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -18,5 +19,11 @@ namespace models.Data
         public Room Room { get; set; }
         [ForeignKey("OrganizationId")]
         public Organization Organization { get; set; }
+        public List<Invoice> Invoices { get; set; }
+
+        public Room_rental()
+        {
+            Invoices = new List<Invoice>();
+        }
     }
 }

@@ -68,6 +68,27 @@ namespace models.Migrations
                     b.ToTable("ElectricsByOrganization");
                 });
 
+            modelBuilder.Entity("models.Data.Invoice", b =>
+                {
+                    b.Property<Guid>("Id");
+
+                    b.Property<DateTime>("DateOfCreate");
+
+                    b.Property<int>("Number");
+
+                    b.Property<DateTime>("PaymentDate");
+
+                    b.Property<Guid?>("Room_RentalId");
+
+                    b.Property<bool>("StatusOfPayment");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Room_RentalId");
+
+                    b.ToTable("Invoice");
+                });
+
             modelBuilder.Entity("models.Data.Lighting", b =>
                 {
                     b.Property<Guid>("Id")
@@ -103,13 +124,13 @@ namespace models.Migrations
 
                     b.Property<double>("Area");
 
-                    b.Property<Guid>("BuildingId");
+                    b.Property<Guid?>("BuildingId");
 
                     b.Property<int>("Floor");
 
                     b.Property<int>("Number");
 
-                    b.Property<Guid>("Type_of_roomId");
+                    b.Property<Guid?>("Type_of_roomId");
 
                     b.HasKey("Id");
 
@@ -157,11 +178,21 @@ namespace models.Migrations
                 {
                     b.HasOne("models.Data.Electric", "Electric")
                         .WithMany("ElectricsByOrganization")
-                        .HasForeignKey("ElectricId");
+                        .HasForeignKey("ElectricId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("models.Data.Organization", "Organization")
                         .WithMany("ElectricsByOrganization")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("models.Data.Invoice", b =>
+                {
+                    b.HasOne("models.Data.Room_rental", "Room_Rental")
+                        .WithMany("Invoices")
+                        .HasForeignKey("Room_RentalId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("models.Data.Lighting", b =>
@@ -189,11 +220,13 @@ namespace models.Migrations
                 {
                     b.HasOne("models.Data.Organization", "Organization")
                         .WithMany("Room_rentals")
-                        .HasForeignKey("OrganizationId");
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("models.Data.Room", "Room")
                         .WithMany("Room_rentals")
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
